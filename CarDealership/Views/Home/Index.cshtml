@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model IndexViewModel
+
+
+<div class="container-fluid">
+
+    <div class="d-flex flex25 container justify-content-center">
+        @foreach (Company comp in Model.Companies)
+        {
+            <a class="btn col" href="~/Home/Index?companyID=@comp.Id"><img src="~/@comp.img" class="img-thumbnail rounded" /></a>
+        }
+    </div>
+
+    <div class="container justify-content-center" style="margin-top: 20px">
+        <div class="d-flex flex-wrap" style="margin-top: 10px">
+            @for (int j = 0; j < Model.Cars.Count(); j++)
+            {
+                <div class="col-4 mt-1">
+                    <div class="card">
+                        <img class="card-img-top" src="~/img/@Model.Cars.ElementAt(j).Id-1.jpg" alt="Card image cap" width="300" height="200">
+                        <div class="card-body">
+                            <i class="fs-3">@Model.Cars.ElementAt(j).Manufacturer.sName @Model.Cars.ElementAt(j).Model</i>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.Cars.Count() == 0)
+            {
+                <h1 class="text-center mt-5">Nothing here yet</h1>
+            }
+        </div>
+    </div>
+</div>
