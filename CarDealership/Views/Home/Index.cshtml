@@ -18,12 +18,12 @@
             @for (int j = 0; j < Model.Cars.Count(); j++)
             {
                 <div class="col-4 mt-1">
-                    <div class="card">
+                    <a class="card text-decoration-none" href="~/Home/Vehicle?carID=@Model.Cars.ElementAt(j).Id">
                         <img class="card-img-top" src="~/img/@Model.Cars.ElementAt(j).Id-1.jpg" alt="Card image cap" width="300" height="200">
                         <div class="card-body">
-                            <i class="fs-3">@Model.Cars.ElementAt(j).Manufacturer.sName @Model.Cars.ElementAt(j).Model</i>
+                            <h1 class="fs-3" style="color:darkslategrey">@Model.Cars.ElementAt(j).Manufacturer.sName @Model.Cars.ElementAt(j).Model</h1>
                         </div>
-                    </div>
+                    </a>
                 </div>
             }
             @if (Model.Cars.Count() == 0)

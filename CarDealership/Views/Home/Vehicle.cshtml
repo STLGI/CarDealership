@@ -1,0 +1,110 @@
+﻿@{
+    ViewData["Title"] = "Vehicle";
+}
+@model Car
+
+<div class="container-fluid ">
+    <div class="d-flex flex-nowrap">
+        <h1 class="col-10 fs-1">@Model.Manufacturer.sName @Model.Model</h1>
+        <h1 class="col fs-1 align-content-end">$@Model.Price</h1>
+    </div>
+    <div class="d-flex flex-nowrap gap-1">
+        <div class="col-8">
+            <img src="~/img/@Model.Id-1.jpg" class="img-fluid" />
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header p-0">
+                    <div class="container-fluid d-flex flex-wrap text-decoration-none p-0 ">
+                        <div class="col-xxl container-fluid d-flex flex-wrap align-items-center justify-content-center p-0" style="object-fit:contain">
+                            <div class="col-auto mt-1 ">
+                                <img src="~/img/ProfilePic.png" class="rounded-circle" width="50" height="50" />
+                            </div>
+                            <div class="col-auto mb-0 d-none d-md-inline mx-xl-2" style="line-height:8px">
+                                <div class="mb-0 p-0 ">
+                                    <h1 class="fs-6" style="color:darkslategrey">Profile-name</h1>
+                                </div>
+                                <div class="mt-0">
+                                </div>
+                                <i class="" style="font-size:9px">account opening date: 2024</i>
+                            </div>
+                            <div class="col-xl-auto ms-0 ms-xl-4">
+                                <div class="flex-row">
+                                    <i class="bi bi-geo-alt-fill" style="font-size:14px"></i>
+                                    <span style="font-size:14px">owners location</span>
+                                </div>
+                                <a class="text-decoration-none flex-row" href="#">
+                                    <i class="bi bi-arrow-right" style="font-size:14px"></i>
+                                    <span style="font-size:14px">visit profile</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body container">
+                    <div class="d-flex flex-wrap gap-3 align-items-center justify-content-center">
+                        <div class="d-flex flex-wrap justify-content-center gap-3">
+                            <div class="col-xl-auto">
+                                <h1 class="fs-5">Contact:</h1>
+                            </div>
+                            <div class="col-xl-auto">
+                                <div class="flex-row">
+                                    <i class="bi bi-telephone"></i>
+                                    <span>phone number</span>
+                                </div>
+                                <div class="flex-row">
+                                    <i class="bi bi-envelope"></i>
+                                    <span>mail adress</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="container-fluid d-flex justify-content-center text-decoration-none" href="#">
+                            <i class="bi bi-arrow-right" style="font-size:14px"></i>
+                            <span style="font-size:14px">message seller</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid d-flex flex-wrap justify-content-center mt-3">
+                <div class="col-7">
+                    <i class="bi bi-fuel-pump" style="font-size:16px"></i>
+                    <span class="d-none d-xxl-inline" style="font-size:16px">Fuel type:</span>
+                    <span style="font-size:16px">@Model.Fuel</span>
+                </div>
+                <div class="col-5">
+                    <i class="bi bi-sign-turn-right" style="font-size:16px"></i>
+                    <span class="d-none d-xxl-inline" style="font-size:16px">Mileage:</span>
+                    <span style="font-size:16px">@Model.MileAge</span>
+                </div>
+                <div class="col-7">
+                    <i class="bi bi-diagram-3" style="font-size:16px"></i>
+                    <span class="d-none d-xxl-inline" style="font-size:16px">Transmission:</span>
+                    <span style="font-size:16px">@Model.Transmission</span>
+                </div>
+                <div class="col-5">
+                    <i class="bi bi-buildings" style="font-size:16px"></i>
+                    <span class="d-none d-xxl-inline" style="font-size:16px">Make:</span>
+                    <span style="font-size:16px">@Model.Manufacturer.sName</span>
+                </div>
+                <div class="col-7">
+                    <i class="bi bi-car-front" style="font-size:16px"></i>
+                    <span class="d-none d-xxl-inline" style="font-size:16px">Model:</span>
+                    <span style="font-size:16px">@Model.Model</span>
+                </div>
+                <div class="col-5">
+                    <i class="bi bi-coin" style="font-size:16px"></i>
+                    <span class="d-none d-xxl-inline" style="font-size:16px">Price:</span>
+                    <span style="font-size:16px">@Model.Price</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex mt-5 gap-2 overflow-auto">
+        @for(int i = 2; i <= Model.pics; i++)
+        {
+            <button class="col-3" onclick="">
+                <img src="~/img/@(Model.Id + "-" + i + ".jpg")" class="img-fluid">
+            </button>
+        }
+    </div>
+</div>

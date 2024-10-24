@@ -22,7 +22,7 @@ namespace CarDealership.Controllers
             companies= new List<Company> { none, mercedes, toyota, audi, volkswagen };
             cars = new List<Car>
             {
-                new Car (1, "W124", mercedes, "auto", "Gasoline", 370000, 5000),
+                new Car (1, "W124", mercedes, "auto", "Gasoline", 370000, 5000, 10),
                 new Car (2, "Supra", toyota, "manual", "Gasoline", 0, 17000),
                 new Car (3, "A8 D5", audi, "auto", "Gasoline", 0, 60000),
                 new Car (4, "A8 D5", audi, "auto", "Gasoline", 0, 60000),
@@ -41,9 +41,9 @@ namespace CarDealership.Controllers
             return View(viewModel);
         }
 
-        public IActionResult Privacy()
+        public IActionResult Vehicle(int carID)
         {
-            return View();
+            return View(cars.Find(c => c.Id == carID));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
