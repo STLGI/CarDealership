@@ -1,16 +1,16 @@
 ﻿@{
     ViewData["Title"] = "Vehicle";
 }
-@model Car
+@model VehicleViewModel
 
 <div class="container-fluid ">
     <div class="d-flex flex-nowrap">
-        <h1 class="col-10 fs-1">@Model.Manufacturer.sName @Model.Model</h1>
-        <h1 class="col fs-1 align-content-end">$@Model.Price</h1>
+        <h1 class="col-10 fs-1">@Model.VehicleCar.Manufacturer.sName @Model.VehicleCar.Model</h1>
+        <h1 class="col fs-1 align-content-end">$@Model.VehicleCar.Price</h1>
     </div>
     <div class="d-flex flex-nowrap gap-1">
         <div class="col-8">
-            <img src="~/img/@Model.Id-1.jpg" class="img-fluid" />
+            <img src="~/img/@Model.GetImageName(Model.VehicleCar.Id, Model.mainImageId)" class="img-fluid" id="main image"/>
         </div>
         <div class="col">
             <div class="card">
@@ -69,42 +69,43 @@
                 <div class="col-7">
                     <i class="bi bi-fuel-pump" style="font-size:16px"></i>
                     <span class="d-none d-xxl-inline" style="font-size:16px">Fuel type:</span>
-                    <span style="font-size:16px">@Model.Fuel</span>
+                    <span style="font-size:16px">@Model.VehicleCar.Fuel</span>
                 </div>
                 <div class="col-5">
                     <i class="bi bi-sign-turn-right" style="font-size:16px"></i>
                     <span class="d-none d-xxl-inline" style="font-size:16px">Mileage:</span>
-                    <span style="font-size:16px">@Model.MileAge</span>
+                    <span style="font-size:16px">@Model.VehicleCar.MileAge</span>
                 </div>
                 <div class="col-7">
                     <i class="bi bi-diagram-3" style="font-size:16px"></i>
                     <span class="d-none d-xxl-inline" style="font-size:16px">Transmission:</span>
-                    <span style="font-size:16px">@Model.Transmission</span>
+                    <span style="font-size:16px">@Model.VehicleCar.Transmission</span>
                 </div>
                 <div class="col-5">
                     <i class="bi bi-buildings" style="font-size:16px"></i>
                     <span class="d-none d-xxl-inline" style="font-size:16px">Make:</span>
-                    <span style="font-size:16px">@Model.Manufacturer.sName</span>
+                    <span style="font-size:16px">@Model.VehicleCar.Manufacturer.sName</span>
                 </div>
                 <div class="col-7">
                     <i class="bi bi-car-front" style="font-size:16px"></i>
                     <span class="d-none d-xxl-inline" style="font-size:16px">Model:</span>
-                    <span style="font-size:16px">@Model.Model</span>
+                    <span style="font-size:16px">@Model.VehicleCar.Model</span>
                 </div>
                 <div class="col-5">
                     <i class="bi bi-coin" style="font-size:16px"></i>
                     <span class="d-none d-xxl-inline" style="font-size:16px">Price:</span>
-                    <span style="font-size:16px">@Model.Price</span>
+                    <span style="font-size:16px">@Model.VehicleCar.Price</span>
                 </div>
             </div>
         </div>
     </div>
     <div class="d-flex mt-5 gap-2 overflow-auto">
-        @for(int i = 2; i <= Model.pics; i++)
+        @for(int i = 1; i <= Model.VehicleCar.pics; i++)
         {
-            <button class="col-3" onclick="">
-                <img src="~/img/@(Model.Id + "-" + i + ".jpg")" class="img-fluid">
-            </button>
+            if(i == Model.mainImageId) continue;
+            <a class="col-3" href="~/Home/Vehicle?carID=@Model.VehicleCar.Id&imageID=@i">
+                <img src="~/img/@Model.GetImageName(Model.VehicleCar.Id, i)" class="img-fluid">
+            </a>
         }
     </div>
 </div>

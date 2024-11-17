@@ -19,7 +19,7 @@
             {
                 <div class="col-4 mt-1">
                     <a class="card text-decoration-none" href="~/Home/Vehicle?carID=@Model.Cars.ElementAt(j).Id">
-                        <img class="card-img-top" src="~/img/@Model.Cars.ElementAt(j).Id-1.jpg" alt="Card image cap" width="300" height="200">
+                        <img class="card-img-top" src="~/img/@Model.GetImageName(Model.Cars.ElementAt(j).Id)" alt="Card image cap" width="300" height="200">
                         <div class="card-body">
                             <h1 class="fs-3" style="color:darkslategrey">@Model.Cars.ElementAt(j).Manufacturer.sName @Model.Cars.ElementAt(j).Model</h1>
                         </div>

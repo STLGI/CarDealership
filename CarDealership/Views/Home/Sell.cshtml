@@ -1,0 +1,130 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Sell Cars";
+}
+@model SellViewModel
+
+<div class="container-fluid">
+    @if (Model.NotEnoughInfoException == true)
+    {
+        <div class="d-flex flex-row bg-danger text-white">
+            <span style="font-weight:500">All of the fields should contain information about the car and at least one image should be uploaded!</span>
+        </div>
+    }
+    <h1>Сreate an offer</h1>
+    <ul class="px-5 list-unstyled border border-2 rounded-2" style="line-height:1.8;">
+        <form asp-action="AddCar" asp-controller="Home" method="post" enctype="multipart/form-data" id="AddCarForm">
+        <li class="nav-item">
+            <span class="fs-3" style="font-weight:500">Add images: </span>
+            <div class="d-flex">
+                <label for="file-input" class="p-0 mx-0 col-1 align-content-center sticky-top">
+                    <img class="img-fluid col-12" src="~/img/add-img.jpg" />
+                </label>
+                <input type="file" name="Files" accept="image/*,.jpg, .png, .jpeg" id="file-input" style="display:none;" multiple onchange="previewImages(event)" />
+                <div id="imagePreviewContainer" class="d-flex col-8 overflow-auto border border-2 rounded-2 mx-1"></div>
+            </div>
+        </li>
+        <li class="nav-item">
+            <span class="fs-3" style="font-weight:500">Manufacturer:</span>
+            <select name="Car.Manufacturer.Id" id="compId">
+                    @{
+                        int i = 0;
+                        foreach (Company comp in Model.Index.Companies)
+                        {
+                        <option value="@i">@comp.Name</option>
+                            i++;
+                        }
+                    }
+            </select>
+        </li>
+        <li>
+            <span class="fs-3" style="font-weight:500">Car model: </span>
+            <input type="text" name="Car.Model" />
+        </li>
+        <li>
+            <span class="fs-3" style="font-weight:500">Transmission type: </span>
+            <select name="Car.Transmission" id="transmission">
+                <option value="Manual">Manual</option>
+                <option value="Automatic">Automatic</option>
+            </select>
+        </li>
+        <li>
+            <span class="fs-3" style="font-weight:500">Fuel type: </span>
+            <input type="text" name="Car.Fuel" />
+        </li>
+        <li>
+            <span class="fs-3" style="font-weight:500">Mileage: </span>
+            <input type="number" name="Car.Mileage" />
+            <span class="fs-3" style="font-weight:500">km</span>
+        </li>
+        <li>
+            <span class="fs-3" style="font-weight:500">Price in USD: </span>
+            <input type="number" name="Car.Price" />
+            <span class="fs-3" style="font-weight:500">$</span>
+
+        </li>
+        <li>
+            <input type="submit" name="submitAddCar" id="submitAddCar" class="btn btn-success col-2">
+        </li>
+        </form>
+    </ul>
+    <div class="d-flex">
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        var allFiles = new DataTransfer(); 
+
+        function previewImages(event) {
+            var files = event.target.files;
+            var container = document.getElementById('imagePreviewContainer');
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                allFiles.items.add(file); // Add each new file to the DataTransfer object
+
+                var reader = new FileReader();
+
+                reader.onload = (function(file, index) {
+                    return function(e) {
+                        var div = document.createElement('div');
+                        div.classList = 'col-3'
+                        div.style.position = 'relative';
+                        div.style.display = 'inline-block';
+                        div.style.margin = '10px';
+
+                        var img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.classList = 'img col-12'
+
+                        var button = document.createElement('button');
+                        button.classList = 'btn btn-danger ';
+                        button.textContent = '—';
+                        button.style.position = 'absolute';
+                        button.style.top = '10px';
+                        button.style.right = '10px';
+
+                        button.onclick = function() {
+                            div.remove();
+                            // Remove the file from the DataTransfer object
+                            allFiles.items.remove(index);
+                            document.getElementById('fileInput').files = allFiles.files; // Update the file input element
+                        };
+
+                        div.appendChild(img);
+                        div.appendChild(button);
+                        container.appendChild(div);
+                    };
+                })(file, allFiles.items.length - 1);
+
+                reader.readAsDataURL(file);
+            }
+
+            document.getElementById('fileInput').files = allFiles.files; // Update the file input element with all files
+        }
+    </script>
+}
