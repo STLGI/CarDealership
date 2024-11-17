@@ -7,7 +7,6 @@
         public IndexViewModel Index { get; set; } = new IndexViewModel();
 
         public Car Car { get; set; }
-        public string FormToken { get; set; }
 
         public bool NotEnoughInfoException { get; set; } = false;
 

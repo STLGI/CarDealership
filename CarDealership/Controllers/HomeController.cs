@@ -62,37 +62,15 @@ namespace CarDealership.Controllers
             return View(viewModel);
         }
 
-        public IActionResult Sell(int thisImgNum = 0, bool InfoException = false)
+        public IActionResult Sell(bool InfoException = false)
         {
-            var token = Guid.NewGuid().ToString();
-            TempData["FormToken"] = token;
+
             SellViewModel model = new SellViewModel();
             model.Index.Cars = cars;
             model.Index.Companies = companies;
-            model.FormToken = token;
-            model.imgNum = thisImgNum;
             model.NotEnoughInfoException = InfoException;
             return View(model);
         }
-        [HttpPost]
-        public IActionResult SellImgUpload(SellViewModel model)
-        {
-            int i = Directory.GetFiles(Directory.GetCurrentDirectory() + "/wwwroot/uploads", "*" + (cars.Count + 1) + "-" + "*").Count() + 1;
-            if (TempData["FormToken"] == null || model.FormToken != TempData["FormToken"].ToString())
-            {
-                TempData["FormSubmitted"] = true;
-                return RedirectToAction("Sell", new { thisImgNum = i });
-            }
-
-            return RedirectToAction("Sell", new { thisImgNum = i });
-        }
-
-        public IActionResult SellImgDelete(int id, int i, int imgNum)
-        {
-            System.IO.File.Delete(Directory.GetFiles(Directory.GetCurrentDirectory() + "/wwwroot/uploads", "*" + id.ToString() + "-" + i.ToString() + ".")[0]);
-            return RedirectToAction("Sell", new { thisImgNum = imgNum });
-        }
-
         [HttpPost]
         public async Task<IActionResult> AddCar(SellViewModel model)
         {
