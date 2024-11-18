@@ -1,7 +1,10 @@
+using CarDealership.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddMvc();
+builder.Services.AddSingleton<CarRepository>();
 
 var app = builder.Build();
 
