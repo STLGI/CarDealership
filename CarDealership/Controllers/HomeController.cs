@@ -4,13 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.IO;
+using Newtonsoft.Json;
+
 
 namespace CarDealership.Controllers
 {
 
 
 
-
+    
     public class HomeController : Controller
     {
         private readonly CarRepository _carRepo;
@@ -78,6 +80,7 @@ namespace CarDealership.Controllers
                 Manufacturer = _carRepo.Companies[model.Car.Manufacturer.Id],
                 pics = model.Files.Count()
             });
+            _carRepo.AddNewCar();
             return RedirectToAction("Index");
         }
 

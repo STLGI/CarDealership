@@ -10,12 +10,5 @@
 
         public bool NotEnoughInfoException { get; set; } = false;
 
-        public int imgNum { get; set; } = 0;
-        public string GetImageName(int carId, int picNum)
-        {
-            var searchPattern = "*" + carId.ToString() + "-" + picNum.ToString() + ".*";
-            var files = Directory.GetFiles(Directory.GetCurrentDirectory() + "/wwwroot/uploads", searchPattern);
-            return files.Length > 0 ? Path.GetFileName(files[0]) : "add-img.jpg";
-        }
     }
 }
