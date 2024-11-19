@@ -62,7 +62,7 @@ namespace CarDealership.Controllers
                 return RedirectToAction("Sell", new { InfoException = true });
 
             }
-            int i = 0;
+            int i = 1;
             foreach (var file in model.Files)
             {
                 var fileName = (_carRepo.Cars.Count + 1) + "-" + i.ToString() + '.' + file.ContentType.Split('/')[1].Trim();
