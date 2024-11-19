@@ -1,49 +1,87 @@
 ﻿using CarDealership.Models;
 using CarDealership.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.IO;
+using Newtonsoft.Json;
+
 
 namespace CarDealership.Controllers
 {
+
+
+
+    
     public class HomeController : Controller
     {
+        private readonly CarRepository _carRepo;
         private readonly ILogger<HomeController> _logger;
-        List<Car> cars;
-        List<Company> companies;
+        private readonly IWebHostEnvironment _webHost;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ILogger<HomeController> logger, CarRepository carRepo, IWebHostEnvironment webHost)
         {
             _logger = logger;
-            Company none = new Company(0, "None", "None", "img/cross.png");
-            Company mercedes = new Company(1, "Mercedes-Benz", "Mercedes", "img/mercedes.png");
-            Company toyota = new Company(2, "Toyota Motor Corporation", "Toyota", "img/toyota.png");
-            Company audi = new Company(3, "Audi AG", "Audi", "img/audi.png");
-            Company volkswagen = new Company(4, "BMW AG", "BMW", "img/volkswagen.png");
-            companies= new List<Company> { none, mercedes, toyota, audi, volkswagen };
-            cars = new List<Car>
-            {
-                new Car (1, "W124", mercedes, "auto", "Gasoline", 370000, 5000),
-                new Car (2, "Supra", toyota, "manual", "Gasoline", 0, 17000),
-                new Car (3, "A8 D5", audi, "auto", "Gasoline", 0, 60000),
-                new Car (4, "A8 D5", audi, "auto", "Gasoline", 0, 60000),
-                new Car (5, "A8 D5", audi, "auto", "Gasoline", 0, 60000)
-            };
+            _carRepo = carRepo;
+            _webHost = webHost;
         }
 
-        public IActionResult Index(int? companyID) 
+        public IActionResult Index(int? companyID = null)
         {
-
-            IndexViewModel viewModel = new IndexViewModel() { Companies = companies, Cars = cars};
-            if(companyID != null && companyID != 0)
+            IndexViewModel viewModel = new IndexViewModel() { Companies = _carRepo.Companies, Cars = _carRepo.Cars };
+            if (companyID != null && companyID != 0)
             {
-                viewModel.Cars = cars.Where(c=>c.Manufacturer.Id == companyID);
+                viewModel.Cars = _carRepo.Cars.Where(c => c.Manufacturer.Id == companyID);
             }
             return View(viewModel);
         }
 
-        public IActionResult Privacy()
+        public IActionResult Vehicle(int carID, int imageID = 1)
         {
-            return View();
+            VehicleViewModel viewModel = new VehicleViewModel { VehicleCar = _carRepo.Cars.Find(c => c.Id == carID), mainImageId = imageID };
+            return View(viewModel);
+        }
+
+        public IActionResult Sell(bool InfoException = false)
+        {
+
+            SellViewModel model = new SellViewModel();
+            model.Index.Cars = _carRepo.Cars;
+            model.Index.Companies = _carRepo.Companies;
+            model.NotEnoughInfoException = InfoException;
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddCar(SellViewModel model)
+        {
+            string substring = "*" + (_carRepo.Cars.Count + 1) + "-" + "*";
+
+            if (model.Car.Manufacturer.Id == 0 || string.IsNullOrEmpty(model.Car.Model) || string.IsNullOrEmpty(model.Car.Transmission) || string.IsNullOrEmpty(model.Car.Fuel) || model.Car.MileAge == 0 || model.Car.Price == 0 || model.Files == null || model.Files.Count == 0)
+            {
+                return RedirectToAction("Sell", new { InfoException = true });
+
+            }
+            int i = 1;
+            foreach (var file in model.Files)
+            {
+                var fileName = (_carRepo.Cars.Count + 1) + "-" + i.ToString() + '.' + file.ContentType.Split('/')[1].Trim();
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", fileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+                i++;
+            }
+            _carRepo.Cars.Add(model.Car with
+            {
+                Id = _carRepo.Cars.Count + 1,
+                Manufacturer = _carRepo.Companies[model.Car.Manufacturer.Id],
+                pics = model.Files.Count()
+            });
+            _carRepo.AddNewCar();
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
