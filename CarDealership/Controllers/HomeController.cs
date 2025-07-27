@@ -5,6 +5,7 @@ using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
+using System.Data;
 
 
 namespace CarDealership.Controllers
@@ -32,14 +33,14 @@ namespace CarDealership.Controllers
             IndexViewModel viewModel = new IndexViewModel() { Companies = _carRepo.Companies, Cars = _carRepo.Cars };
             if (companyID != null && companyID != 0)
             {
-                viewModel.Cars = _carRepo.Cars.Where(c => c.Manufacturer.Id == companyID);
+                viewModel.Cars = _carRepo.Cars.Where(c => c.ManufacturerId == companyID);
             }
             return View(viewModel);
         }
 
         public IActionResult Vehicle(int carID, int imageID = 1)
         {
-            VehicleViewModel viewModel = new VehicleViewModel { VehicleCar = _carRepo.Cars.Find(c => c.Id == carID), mainImageId = imageID };
+            VehicleViewModel viewModel = new VehicleViewModel { VehicleCar = _carRepo.Cars.Find(c => c.Id == carID), mainImageId = imageID, Companies = _carRepo.Companies };
             return View(viewModel);
         }
 
@@ -55,9 +56,8 @@ namespace CarDealership.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCar(SellViewModel model)
         {
-            string substring = "*" + (_carRepo.Cars.Count + 1) + "-" + "*";
 
-            if (model.Car.Manufacturer.Id == 0 || string.IsNullOrEmpty(model.Car.Model) || string.IsNullOrEmpty(model.Car.Transmission) || string.IsNullOrEmpty(model.Car.Fuel) || model.Car.MileAge == 0 || model.Car.Price == 0 || model.Files == null || model.Files.Count == 0)
+            if (model.Car.ManufacturerId == 0 || string.IsNullOrEmpty(model.Car.Model) || string.IsNullOrEmpty(model.Car.Transmission) || string.IsNullOrEmpty(model.Car.Fuel) || model.Car.MileAge == 0 || model.Car.Price == 0 || model.Files == null || model.Files.Count == 0)
             {
                 return RedirectToAction("Sell", new { InfoException = true });
 
@@ -77,7 +77,7 @@ namespace CarDealership.Controllers
             _carRepo.Cars.Add(model.Car with
             {
                 Id = _carRepo.Cars.Count + 1,
-                Manufacturer = _carRepo.Companies[model.Car.Manufacturer.Id],
+                ManufacturerId = model.Car.ManufacturerId,
                 pics = model.Files.Count()
             });
             _carRepo.AddNewCar();

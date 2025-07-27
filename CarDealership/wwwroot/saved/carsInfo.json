@@ -1,0 +1,72 @@
+[
+  {
+    "Id": 1,
+    "Model": "W124",
+    "ManufacturerId": 1,
+    "Transmission": "auto",
+    "Fuel": "Gasoline",
+    "MileAge": 370000,
+    "Price": 5000,
+    "pics": 10
+  },
+  {
+    "Id": 2,
+    "Model": "Supra",
+    "ManufacturerId": 2,
+    "Transmission": "manual",
+    "Fuel": "Gasoline",
+    "MileAge": 0,
+    "Price": 17000,
+    "pics": 0
+  },
+  {
+    "Id": 3,
+    "Model": "A8 D5",
+    "ManufacturerId": 3,
+    "Transmission": "auto",
+    "Fuel": "Gasoline",
+    "MileAge": 0,
+    "Price": 60000,
+    "pics": 0
+  },
+  {
+    "Id": 4,
+    "Model": "A8 D5",
+    "ManufacturerId": 3,
+    "Transmission": "auto",
+    "Fuel": "Gasoline",
+    "MileAge": 0,
+    "Price": 60000,
+    "pics": 0
+  },
+  {
+    "Id": 5,
+    "Model": "A8 D5",
+    "ManufacturerId": 3,
+    "Transmission": "auto",
+    "Fuel": "Gasoline",
+    "MileAge": 0,
+    "Price": 60000,
+    "pics": 0
+  },
+  {
+    "Id": 6,
+    "Model": "Ronnie Maximus",
+    "ManufacturerId": 0,
+    "Transmission": "Manual",
+    "Fuel": "30000kcal a day",
+    "MileAge": 100000,
+    "Price": 500,
+    "pics": 1
+  },
+  {
+    "Id": 7,
+    "Model": "Ronnie Minimus",
+    "ManufacturerId": 3,
+    "Transmission": "Automatic",
+    "Fuel": "Uranium",
+    "MileAge": 5,
+    "Price": 2,
+    "pics": 1
+  }
+]

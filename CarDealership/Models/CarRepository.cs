@@ -1,49 +1,40 @@
-﻿using Newtonsoft.Json;
+﻿using Dapper;
+using Newtonsoft.Json;
+using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Reflection;
+using System.Xml.Linq;
 
 namespace CarDealership.Models
 {
     public class CarRepository
     {
+
+        SqlConnection connection = new SqlConnection("server=(localdb)\\mssqllocaldb;Integrated Security=True");
         public List<Car>? Cars { get; set; }
         public List<Company> Companies { get; set; }
 
         public string? carsJson { get; set; }
 
-        public CarRepository() {
-            if(!File.Exists(Directory.GetCurrentDirectory()  + "/wwwroot/saved/carsInfo.json"))
-            {
-                using (FileStream fs = File.Create(Directory.GetCurrentDirectory() + "/wwwroot/saved/carsInfo.json"))
-                {
-                }
-            }
-            else
-            {
-                
-                carsJson = File.ReadAllText(Directory.GetCurrentDirectory()  + "/wwwroot/saved/carsInfo.json");
-            }
-            Cars = JsonConvert.DeserializeObject<List<Car>>(carsJson);
-            Company none = new Company(0, "None", "None", "img/cross.png");
-            Company mercedes = new Company(1, "Mercedes-Benz", "Mercedes", "img/mercedes.png");
-            Company toyota = new Company(2, "Toyota Motor Corporation", "Toyota", "img/toyota.png");
-            Company audi = new Company(3, "Audi AG", "Audi", "img/audi.png");
-            Company volkswagen = new Company(4, "BMW AG", "BMW", "img/volkswagen.png");
-            Companies = new List<Company> { none, mercedes, toyota, audi, volkswagen };
+        public CarRepository()
+        {
+            var tablesExist = connection.QueryFirstOrDefault<int>(
+                   "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME IN ('Cars', 'Companies')"); // check for the tables "Cars“ and "Companies"
 
-            if (Cars == null)
-            {
-                Cars = new List<Car>
-                {
-                    new Car (1, "W124", mercedes, "auto", "Gasoline", 370000, 5000, 10),
-                    new Car (2, "Supra", toyota, "manual", "Gasoline", 0, 17000),
-                    new Car (3, "A8 D5", audi, "auto", "Gasoline", 0, 60000),
-                    new Car (4, "A8 D5", audi, "auto", "Gasoline", 0, 60000),
-                    new Car (5, "A8 D5", audi, "auto", "Gasoline", 0, 60000)
-                };
-            }
+            if (tablesExist < 2) { connection.Execute(ReadSqlScript()); } // if at least one of them does not exist create both
+
+            Companies = connection.Query<Company>("SELECT * FROM Companies").ToList();
+            Cars = connection.Query<Car>("SELECT * FROM Cars").ToList();
         }
         public void AddNewCar()
         {
-            File.WriteAllText(Directory.GetCurrentDirectory() + "/wwwroot/saved/carsInfo.json", JsonConvert.SerializeObject(Cars, Formatting.Indented));
+            connection.Query("INSERT INTO Cars (Id, Model, ManufacturerId, Transmission, Fuel, MileAge, Price, pics) VALUES (@Id, @Model, @ManufacturerId, @Transmission, @Fuel, @MileAge, @Price, @pics);", Cars[Cars.Count - 1]);
+        }
+        private string ReadSqlScript()
+        { 
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Models", "TableCreator.sql");
+            return File.ReadAllText(filePath);
         }
     }
 }
