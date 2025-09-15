@@ -63,9 +63,14 @@ namespace CarDealership.Controllers
 
             }
             int i = 1;
+            Car AddedCar = _carRepo.AddNewCar(model.Car with
+            {
+                ManufacturerId = model.Car.ManufacturerId,
+                pics = model.Files.Count()
+            }) ;
             foreach (var file in model.Files)
             {
-                var fileName = (_carRepo.Cars.Count + 1) + "-" + i.ToString() + '.' + file.ContentType.Split('/')[1].Trim();
+                var fileName = (AddedCar.Id) + "-" + i.ToString() + '.' + file.ContentType.Split('/')[1].Trim();
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", fileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
@@ -74,13 +79,8 @@ namespace CarDealership.Controllers
                 }
                 i++;
             }
-            _carRepo.Cars.Add(model.Car with
-            {
-                Id = _carRepo.Cars.Count + 1,
-                ManufacturerId = model.Car.ManufacturerId,
-                pics = model.Files.Count()
-            });
-            _carRepo.AddNewCar();
+            _carRepo.Cars.Add(AddedCar);
+
             return RedirectToAction("Index");
         }
 
