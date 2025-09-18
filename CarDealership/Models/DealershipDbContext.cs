@@ -1,25 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CarDealership.Models;
+using Microsoft.EntityFrameworkCore;
 
-
-
-namespace CarDealership.Models
+public class DealershipDbContext : DbContext
 {
-    public class DealershipDbContext : DbContext
+    private readonly IConfiguration _appConfig;
+
+    public DealershipDbContext(DbContextOptions<DealershipDbContext> options)
+        : base(options)
     {
-        IConfiguration appConfig;
-        public DealershipDbContext(IConfiguration config)
-        {
-            appConfig = config;
-        }
-        public DbSet<Car> Cars { get; set; }
-        public DbSet<Company> Companies { get; set; }
+    }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-
-            optionsBuilder.UseSqlServer(appConfig.GetConnectionString("DealershipDbLocalConnection"));
+    public DbSet<Car> Cars { get; set; }
+    public DbSet<Company> Companies { get; set; }
 
 
-        }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Car>()
+            .HasOne(c => c.Manufacturer)
+            .WithMany();
     }
 }

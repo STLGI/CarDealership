@@ -1,14 +1,19 @@
-    using CarDealership.Models;
-using System.Data.SqlClient;
-using Dapper;
-
+using CarDealership.Models;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddMvc();
-builder.Services.AddSingleton<CarRepository>();
+builder.Services.AddScoped<CarRepository>();
+
+var cs = builder.Configuration.GetConnectionString("DealershipDbLocalConnection");
+Console.WriteLine($"DEBUG: connection string = {cs}");
+
+builder.Services.AddDbContext<DealershipDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DealershipDbLocalConnection")));
+
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

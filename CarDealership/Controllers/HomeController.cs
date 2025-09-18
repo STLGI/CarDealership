@@ -1,11 +1,7 @@
 ﻿using CarDealership.Models;
 using CarDealership.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlTypes;
 using System.Diagnostics;
-using System.IO;
-using Newtonsoft.Json;
-using System.Data;
 
 
 namespace CarDealership.Controllers
@@ -13,14 +9,19 @@ namespace CarDealership.Controllers
 
 
 
-    
+
     public class HomeController : Controller
     {
         private readonly CarRepository _carRepo;
         private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _webHost;
 
-
+        private static bool ModelNotComplete(SellViewModel model)
+        {
+            return (model.Car.Manufacturer.Id == 0 || string.IsNullOrEmpty(model.Car.Model) ||
+                    string.IsNullOrEmpty(model.Car.Transmission) || string.IsNullOrEmpty(model.Car.Fuel) ||
+                    model.Car.MileAge == 0 || model.Car.Price == 0 || model.Files.Count == 0);
+        }
         public HomeController(ILogger<HomeController> logger, CarRepository carRepo, IWebHostEnvironment webHost)
         {
             _logger = logger;
@@ -28,58 +29,58 @@ namespace CarDealership.Controllers
             _webHost = webHost;
         }
 
-        public IActionResult Index(int? companyID = null)
+        public IActionResult Index(int? companyId = null)
         {
-            IndexViewModel viewModel = new IndexViewModel() { Companies = _carRepo.Companies, Cars = _carRepo.Cars };
-            if (companyID != null && companyID != 0)
+            var viewModel = new IndexViewModel() { Companies = _carRepo.Companies, Cars = _carRepo.Cars };
+            if (companyId != null && companyId != 0 && _carRepo.Cars != null)
             {
-                viewModel.Cars = _carRepo.Cars.Where(c => c.ManufacturerId == companyID);
+                viewModel.Cars = _carRepo.Cars.Where(c => c.Manufacturer.Id == companyId);
             }
             return View(viewModel);
         }
 
-        public IActionResult Vehicle(int carID, int imageID = 1)
+        public IActionResult Vehicle(int carId, int imageId = 1)
         {
-            VehicleViewModel viewModel = new VehicleViewModel { VehicleCar = _carRepo.Cars.Find(c => c.Id == carID), mainImageId = imageID, Companies = _carRepo.Companies };
+            var viewModel = new VehicleViewModel { VehicleCar = _carRepo.Cars?.Find(c => c.Id == carId), MainImageId = imageId, Companies = _carRepo.Companies };
             return View(viewModel);
         }
 
-        public IActionResult Sell(bool InfoException = false)
+        public IActionResult Sell(bool infoException = false)
         {
 
-            SellViewModel model = new SellViewModel();
+            var model = new SellViewModel();
             model.Index.Cars = _carRepo.Cars;
             model.Index.Companies = _carRepo.Companies;
-            model.NotEnoughInfoException = InfoException;
+            model.NotEnoughInfoException = infoException;
             return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> AddCar(SellViewModel model)
         {
 
-            if (model.Car.ManufacturerId == 0 || string.IsNullOrEmpty(model.Car.Model) || string.IsNullOrEmpty(model.Car.Transmission) || string.IsNullOrEmpty(model.Car.Fuel) || model.Car.MileAge == 0 || model.Car.Price == 0 || model.Files == null || model.Files.Count == 0)
+            if (ModelNotComplete(model))
             {
                 return RedirectToAction("Sell", new { InfoException = true });
 
             }
-            int i = 1;
-            Car AddedCar = _carRepo.AddNewCar(model.Car with
+            var i = 1;
+            var addedCar = _carRepo.AddNewCar(model.Car with
             {
-                ManufacturerId = model.Car.ManufacturerId,
-                pics = model.Files.Count()
-            }) ;
+                Manufacturer = model.Car.Manufacturer,
+                Pics = model.Files.Count()
+            });
             foreach (var file in model.Files)
             {
-                var fileName = (AddedCar.Id) + "-" + i.ToString() + '.' + file.ContentType.Split('/')[1].Trim();
+                var fileName = (addedCar.Id) + "-" + i.ToString() + '.' + file.ContentType.Split('/')[1].Trim();
                 var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", fileName);
 
-                using (var stream = new FileStream(path, FileMode.Create))
+                await using (var stream = new FileStream(path, FileMode.Create))
                 {
                     file.CopyTo(stream);
                 }
                 i++;
             }
-            _carRepo.Cars.Add(AddedCar);
+            _carRepo.Cars?.Add(addedCar);
 
             return RedirectToAction("Index");
         }

@@ -7,20 +7,20 @@
 @model SellViewModel
 
 <div class="container-fluid">
-    @if (Model.NotEnoughInfoException == true)
+    @if (Model.NotEnoughInfoException)
     {
         <div class="d-flex flex-row bg-danger text-white">
-            <span style="font-weight:500">All of the fields should contain information about the car and at least one image should be uploaded!</span>
+            <span style="font-weight:500">All the fields should contain information about the car and at least one image should be uploaded!</span>
         </div>
     }
-    <h1>Сreate an offer</h1>
+    <h1>Create an offer</h1>
     <ul class="px-5 list-unstyled border border-2 rounded-2" style="line-height:1.8;">
         <form asp-action="AddCar" asp-controller="Home" method="post" enctype="multipart/form-data" id="AddCarForm">
         <li class="nav-item">
             <span class="fs-3" style="font-weight:500">Add images: </span>
             <div class="d-flex">
                 <label for="file-input" class="p-0 mx-0 col-1 align-content-center sticky-top">
-                    <img class="img-fluid col-12" src="~/img/add-img.jpg" />
+                    <img class="img-fluid col-12" src="~/img/add-img.jpg" alt=""/>
                 </label>
                 <input type="file" name="Files" accept="image/*,.jpg, .png, .jpeg" id="file-input" style="display:none;" multiple onchange="previewImages(event)" />
                 <div id="imagePreviewContainer" class="d-flex col-8 overflow-auto border border-2 rounded-2 mx-1"></div>
@@ -30,8 +30,8 @@
             <span class="fs-3" style="font-weight:500">Manufacturer:</span>
             <select name="Car.ManufacturerId" id="compId">
                     @{
-                        int i = 0;
-                        foreach (Company comp in Model.Index.Companies)
+                        var i = 0;
+                        foreach (var comp in Model.Index.Companies)
                         {
                         <option value="@i">@comp.Name</option>
                             i++;

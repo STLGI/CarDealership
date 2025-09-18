@@ -1,15 +1,15 @@
 ﻿namespace CarDealership.Models
 {
-    public record class Car
+    public record Car
     {
         public int Id { get; set; }
-        public string Model { get; set; }
-        public int ManufacturerId { get; set; }
-        public string Transmission { get; set; }
-        public string Fuel { get; set; }
+        public required string Model { get; set; }
+        public required Company Manufacturer { get; set; }
+        public required string Transmission { get; set; }
+        public required string Fuel { get; set; }
         public int MileAge { get; set; }
         public int Price { get; set; }
-        public int? pics { get; set; } = 0;
+        public int? Pics { get; set; } = 0;
     }
 
 }
