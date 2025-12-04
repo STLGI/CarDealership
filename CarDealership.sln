@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarDealership", "CarDealership\CarDealership.csproj", "{C9001718-BAD4-4E98-A8AD-89C7023E913D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarDealership.api", "CarDealership\CarDealership.api.csproj", "{C9001718-BAD4-4E98-A8AD-89C7023E913D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarDealership.web", "CarDealershipFront\CarDealership.web.csproj", "{C99D8B90-A6C4-4F07-B1CE-73E4DBBAF7C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C9001718-BAD4-4E98-A8AD-89C7023E913D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9001718-BAD4-4E98-A8AD-89C7023E913D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9001718-BAD4-4E98-A8AD-89C7023E913D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C99D8B90-A6C4-4F07-B1CE-73E4DBBAF7C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C99D8B90-A6C4-4F07-B1CE-73E4DBBAF7C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C99D8B90-A6C4-4F07-B1CE-73E4DBBAF7C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C99D8B90-A6C4-4F07-B1CE-73E4DBBAF7C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

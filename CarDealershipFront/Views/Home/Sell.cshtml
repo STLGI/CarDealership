@@ -1,0 +1,72 @@
+﻿@{
+    Layout = "_Layout"; 
+    ViewData["Title"] = "Sell Cars";
+}
+
+
+<div class="container-fluid">
+
+    <div class="d-flex flex-row bg-danger text-white" id="ExceptionAlert">
+
+    </div>
+    <h1>Create an offer</h1>
+    <ul class="px-5 list-unstyled border border-2 rounded-2" style="line-height:1.8;">
+        <form enctype="multipart/form-data" id="AddCarForm">
+        <li class="nav-item">
+            <span class="fs-3" style="font-weight:500">Add images: </span>
+            <div class="d-flex">
+                <label for="file-input" class="p-0 mx-0 col-1 align-content-center sticky-top">
+                    <img class="img-fluid col-12" src="~/img/add-img.jpg" alt="" />
+                </label>
+                <input type="file" name="Files" accept="image/*,.jpg, .png, .jpeg" id="file-input" style="display:none;" multiple onchange="previewImages(event)" />
+                <div id="imagePreviewContainer" class="d-flex col-8 overflow-auto border border-2 rounded-2 mx-1"></div>
+            </div>
+        </li>
+        <li class="nav-item">
+            <span class="fs-3" style="font-weight:500">Manufacturer:</span>
+            <select name="Car.ManufacturerId" id="compId">
+
+            </select>
+        </li>
+        <li>
+            <span class="fs-3" style="font-weight:500">Car model: </span>
+            <input type="text" name="Car.Model" />
+        </li>
+        <li>
+            <span class="fs-3" style="font-weight:500">Transmission type: </span>
+            <select name="Car.Transmission" id="transmission">
+                <option value="Manual">Manual</option>
+                <option value="Automatic">Automatic</option>
+            </select>
+        </li>
+        <li>
+            <span class="fs-3" style="font-weight:500">Fuel type: </span>
+            <input type="text" name="Car.Fuel" />
+        </li>
+        <li>
+            <span class="fs-3" style="font-weight:500">Mileage: </span>
+            <input type="number" name="Car.MileAge" />
+            <span class="fs-3" style="font-weight:500">km</span>
+        </li>
+        <li>
+            <span class="fs-3" style="font-weight:500">Price in USD: </span>
+            <input type="number" name="Car.Price" />
+            <span class="fs-3" style="font-weight:500">$</span>
+
+        </li>
+        <li>
+            <input type="submit" class="btn btn-success col-2">
+        </li>
+        </form>
+    </ul>
+    <div class="d-flex">
+    </div>
+
+</div>
+
+<script src="~/js/sell.js"></script>
+@section Scripts {
+    <script>
+       
+    </script>
+}

@@ -10,6 +10,8 @@
         public List<Car>? Cars { get; set; }
         public List<Company> Companies { get; set; }
 
+        public List<CarImage> CarImages { get; set; }
+
         //public string? carsJson { get; set; }
 
 
@@ -24,14 +26,32 @@
             _context = context;
             Companies = _context.Companies.ToList();
             Cars = _context.Cars.ToList();
+            CarImages = _context.CarImages.ToList();
         }
 
-        public Car? AddNewCar(Car car)
+        public Car AddNewCar(Car car, List<IFormFile> files)
         {
+
+
+            foreach (var file in files)
+            {
+                using var ms = new MemoryStream();
+                file.CopyTo(ms);
+
+                car.Images.Add(new CarImage
+                {
+                    FileName = file.FileName,
+                    ContentType = file.ContentType,
+                    Data = ms.ToArray(),
+                    Car = car
+                });
+            }
             _context.Cars.Add(car);
+            Cars.Add(car);
             _context.SaveChanges();
-            return _context.Cars.OrderBy(c => c.Id).LastOrDefault();
+            return car;
         }
+
         /*private string ReadSqlScript()
         { 
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Models", "TableCreator.sql");

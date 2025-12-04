@@ -33,7 +33,7 @@ namespace CarDealership.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ManufacturerId")
+                    b.Property<int?>("ManufacturerId")
                         .HasColumnType("int");
 
                     b.Property<int>("MileAge")
@@ -42,9 +42,6 @@ namespace CarDealership.Migrations
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Pics")
-                        .HasColumnType("int");
 
                     b.Property<int>("Price")
                         .HasColumnType("int");
@@ -58,6 +55,36 @@ namespace CarDealership.Migrations
                     b.HasIndex("ManufacturerId");
 
                     b.ToTable("Cars");
+                });
+
+            modelBuilder.Entity("CarDealership.Models.CarImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarId");
+
+                    b.ToTable("CarImages");
                 });
 
             modelBuilder.Entity("CarDealership.Models.Company", b =>
@@ -83,17 +110,68 @@ namespace CarDealership.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Img = "cross.png",
+                            Name = "None",
+                            SName = "None"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Img = "audi.png",
+                            Name = "Audi AG",
+                            SName = "Audi"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Img = "mercedes.png",
+                            Name = "Mercedes Benz AG",
+                            SName = "Mercedes"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Img = "toyota.png",
+                            Name = "Toyota Motor Corporation",
+                            SName = "Toyota"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Img = "volkswagen.png",
+                            Name = "Volkswagen",
+                            SName = "Volkswagen"
+                        });
                 });
 
             modelBuilder.Entity("CarDealership.Models.Car", b =>
                 {
                     b.HasOne("CarDealership.Models.Company", "Manufacturer")
                         .WithMany()
-                        .HasForeignKey("ManufacturerId")
+                        .HasForeignKey("ManufacturerId");
+
+                    b.Navigation("Manufacturer");
+                });
+
+            modelBuilder.Entity("CarDealership.Models.CarImage", b =>
+                {
+                    b.HasOne("CarDealership.Models.Car", "Car")
+                        .WithMany("Images")
+                        .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Manufacturer");
+                    b.Navigation("Car");
+                });
+
+            modelBuilder.Entity("CarDealership.Models.Car", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }
