@@ -1,4 +1,10 @@
 ﻿namespace CarDealership.Models
 {
-    public record class Company(int Id, string Name, string sName, string img){}
+    public record Company
+    {
+        public required int Id { get; set; }
+        public required string Name { get; set; }
+        public required string SName { get; set; }
+        public required string Img { get; set; }
+    }
 }
